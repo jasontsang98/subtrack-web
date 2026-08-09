@@ -1,0 +1,11 @@
+services:
+  app:
+    build:
+      context: .
+      target: runner
+
+  worker:
+    build:
+      context: .
+      target: worker
+

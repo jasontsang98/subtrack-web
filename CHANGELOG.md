@@ -2,7 +2,16 @@
 
 All notable changes to Subtrack Web are documented here. Versions follow [Semantic Versioning](https://semver.org/).
 
-## [0.2.1] - Unreleased
+## [0.2.2] - Unreleased
+
+### Changed
+
+- Made the default Compose workflow pull published release images without local builds.
+- Added a separate Compose override for contributors building from source.
+- Added a self-hosting guide covering installation, upgrades, rollback, backups and troubleshooting.
+- Pinned new installations to the current stable release by default.
+
+## [0.2.1] - 2026-08-09
 
 ### Added
 
