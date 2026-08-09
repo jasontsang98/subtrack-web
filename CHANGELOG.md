@@ -2,6 +2,13 @@
 
 All notable changes to Subtrack Web are documented here. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- Added isolated PostgreSQL integration tests for migrations, authentication, subscription APIs, calendar projections, and recurrence roll-forward.
+- Added automated backup archive validation and restore smoke testing against a disposable database.
+
 ## [0.3.0] - 2026-08-09
 
 ### Added

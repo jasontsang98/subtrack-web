@@ -11,7 +11,8 @@
     "start": "next start",
     "test": "npm run test:unit && npm run build",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
-    "test:unit": "node --test --experimental-strip-types tests/*.test.ts"
+    "test:unit": "node --test --experimental-strip-types tests/*.test.ts",
+    "test:integration": "node --test --test-concurrency=1 --experimental-strip-types tests/integration/*.test.ts"
   },
   "dependencies": {
     "next": "^16.2.11",

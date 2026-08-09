@@ -169,6 +169,15 @@ npm run build
 npm run dev
 ```
 
+Run the fast unit tests with `npm run test:unit`. The complete PostgreSQL and
+API suite runs in disposable Docker containers:
+
+```sh
+./scripts/test-integration.sh
+```
+
+The integration suite never connects to the normal Compose database. It validates all migrations, authenticated API behavior, recurrence roll-forward, backup archive integrity, and a restore into a second temporary database.
+
 The production Docker image uses Next.js standalone output and runs as a non-root user.
 
 ## Architecture

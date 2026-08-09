@@ -1,0 +1,65 @@
+services:
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: subtrack_test
+      POSTGRES_USER: subtrack
+      POSTGRES_PASSWORD: integration-only
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U subtrack -d subtrack_test"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+
+  migrate:
+    image: postgres:17-alpine
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://subtrack:integration-only@db:5432/subtrack_test
+    volumes:
+      - ./db/migrations:/migrations:ro
+      - ./scripts/run-migrations.sh:/usr/local/bin/run-migrations:ro
+    command: ["sh", "/usr/local/bin/run-migrations"]
+    restart: "no"
+
+  app:
+    build:
+      context: .
+      target: runner
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      DATABASE_URL: postgresql://subtrack:integration-only@db:5432/subtrack_test
+      AUTH_PASSWORD: integration-only-password
+      AUTH_SECRET: integration-only-secret-0123456789abcdef0123456789abcdef
+      COOKIE_SECURE: "false"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:3000/api/health || exit 1"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+      start_period: 5s
+
+  integration:
+    build:
+      context: .
+      target: integration
+    depends_on:
+      app:
+        condition: service_healthy
+    environment:
+      BASE_URL: http://app:3000
+      AUTH_PASSWORD: integration-only-password
+      DATABASE_URL: postgresql://subtrack:integration-only@db:5432/subtrack_test
+      PGHOST: db
+      PGPORT: "5432"
+      PGUSER: subtrack
+      PGPASSWORD: integration-only
+      PGDATABASE: subtrack_test
+      TEST_DATABASE_NAME: subtrack_test
+    command: ["sh", "-c", "npm run test:integration && ./scripts/test-backup-restore.sh"]
