@@ -28,19 +28,14 @@ The login is appropriate for localhost and a trusted private LAN. Failed sign-in
 
 ## Quick start
 
-Requirements:
-
-- Docker Engine with Docker Compose v2, or Docker Desktop
-- At least 1 GB of free memory
-- Ports 3000 and 8025 available on localhost
-
 ```sh
 git clone https://github.com/jasontsang98/subtrack-web.git
 cd subtrack-web
 cp .env.example .env
-# Set a unique AUTH_PASSWORD, then generate AUTH_SECRET:
-# openssl rand -hex 32
-docker compose up --build -d
+# Set AUTH_PASSWORD, replace both PostgreSQL password values,
+# and generate AUTH_SECRET with: openssl rand -hex 32
+docker compose pull
+docker compose up -d
 ```
 
 Open:
@@ -68,6 +63,8 @@ Permanently delete containers and the PostgreSQL volume:
 docker compose down --volumes
 ```
 
+See [DEPLOYMENT.md](DEPLOYMENT.md) for secure setup, upgrades, rollback, backup restoration and troubleshooting.
+
 ## Configuration
 
 Copy `.env.example` to `.env`. Important settings:
@@ -82,7 +79,8 @@ Copy `.env.example` to `.env`. Important settings:
 | `AUTH_SECRET` | required | Random secret of at least 32 characters used to sign sessions |
 | `COOKIE_SECURE` | `false` | Set to `true` only when serving the app over HTTPS |
 | `BACKUP_TIMEZONE` | `Australia/Sydney` | IANA timezone for backups |
-| `BACKUP_HOUR` | `2` | Daily backup hour, 023 |
+| `BACKUP_HOUR` | `2` | Daily backup hour, 0-23 |
+| `SUBTRACK_VERSION` | current release | Published application image version |
 | `SMTP_HOST` | `mailpit` | SMTP host |
 | `EMAIL_FROM` | `Subtrack <subtrack@localhost>` | Reminder sender |
 
@@ -92,10 +90,10 @@ If you change `POSTGRES_PASSWORD`, update `DATABASE_URL` to match. Never commit 
 
 Versioned images are published to GitHub Container Registry for AMD64 and ARM64:
 
-- `ghcr.io/jasontsang98/subtrack-web:0.2.0`
-- `ghcr.io/jasontsang98/subtrack-web-worker:0.2.0`
+- `ghcr.io/jasontsang98/subtrack-web:0.2.1`
+- `ghcr.io/jasontsang98/subtrack-web-worker:0.2.1`
 
-Set `SUBTRACK_VERSION=0.2.0` in `.env` to pin a release. Pull and start the published images without rebuilding:
+Set `SUBTRACK_VERSION=0.2.1` in `.env` to pin a release. Pull and start the published images without rebuilding:
 
 ```sh
 docker compose pull app worker
@@ -105,11 +103,11 @@ docker compose up -d --no-build
 For reproducible deployments, pin a numbered version rather than `latest`. Release images include an SBOM and signed GitHub build provenance. Verify an image with:
 
 ```sh
-gh attestation verify oci://ghcr.io/jasontsang98/subtrack-web:0.2.0 \
+gh attestation verify oci://ghcr.io/jasontsang98/subtrack-web:0.2.1 \
   --repo jasontsang98/subtrack-web
 ```
 
-Local development still uses `docker compose up --build`, which builds the same Dockerfile targets on your machine.
+Local development uses `docker compose -f compose.yaml -f compose.dev.yaml up --build`, which builds the same Dockerfile targets on your machine.
 
 ## Data, backups and restore
 
@@ -156,7 +154,8 @@ Before upgrading:
 ```sh
 ./scripts/backup.sh
 git pull --ff-only
-docker compose up --build -d
+docker compose pull
+docker compose up -d
 ```
 
 ## Development

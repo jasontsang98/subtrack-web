@@ -35,9 +35,6 @@ services:
 
   app:
     image: ghcr.io/jasontsang98/subtrack-web:${SUBTRACK_VERSION:-latest}
-    build:
-      context: .
-      target: runner
     restart: unless-stopped
     depends_on:
       migrate:
@@ -70,9 +67,6 @@ services:
 
   worker:
     image: ghcr.io/jasontsang98/subtrack-web-worker:${SUBTRACK_VERSION:-latest}
-    build:
-      context: .
-      target: worker
     restart: unless-stopped
     depends_on:
       migrate:
