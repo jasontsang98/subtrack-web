@@ -92,9 +92,9 @@ export default function CalendarPage() {
     <section className={styles.intro}>
       <div><em>PAYMENT CALENDAR</em><h1>See the month at a glance.</h1><p>Recorded charges behind you, projected renewals ahead.</p></div>
       <div className={styles.monthControl}>
-        <button aria-label="Previous month" onClick={() => setMonth(value => shiftMonth(value, -1))}>?</button>
+        <button aria-label="Previous month" onClick={() => setMonth(value => shiftMonth(value, -1))}><span aria-hidden="true">&lsaquo;</span></button>
         <strong>{new Intl.DateTimeFormat("en-AU", { month: "long", year: "numeric" }).format(monthDate)}</strong>
-        <button aria-label="Next month" onClick={() => setMonth(value => shiftMonth(value, 1))}>?</button>
+        <button aria-label="Next month" onClick={() => setMonth(value => shiftMonth(value, 1))}><span aria-hidden="true">&rsaquo;</span></button>
       </div>
     </section>
 
@@ -133,7 +133,7 @@ export default function CalendarPage() {
           <div><span>SELECTED DAY</span><h2>{new Intl.DateTimeFormat("en-AU", { weekday: "long", day: "numeric", month: "long" }).format(parseLocalDate(selectedDate))}</h2><strong>{money(totalsByDate[selectedDate] ?? 0)}</strong></div>
           {selectedEvents.length ? <div className={styles.eventList}>{selectedEvents.map(event => <article key={event.id}>
             <i style={{ background: event.color }}>{event.name[0]}</i>
-            <span><b>{event.name}</b><small>{event.category} ? {event.status}</small></span>
+            <span><b>{event.name}</b><small>{event.category} <span aria-hidden="true">&middot;</span> {event.status}</small></span>
             <strong>{money(event.amount)}</strong>
           </article>)}</div> : <div className={styles.empty}>No payments on this day.</div>}
         </aside>
