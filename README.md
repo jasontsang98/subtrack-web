@@ -90,10 +90,10 @@ If you change `POSTGRES_PASSWORD`, update `DATABASE_URL` to match. Never commit 
 
 Versioned images are published to GitHub Container Registry for AMD64 and ARM64:
 
-- `ghcr.io/jasontsang98/subtrack-web:0.2.1`
-- `ghcr.io/jasontsang98/subtrack-web-worker:0.2.1`
+- `ghcr.io/jasontsang98/subtrack-web:0.2.2`
+- `ghcr.io/jasontsang98/subtrack-web-worker:0.2.2`
 
-Set `SUBTRACK_VERSION=0.2.1` in `.env` to pin a release. Pull and start the published images without rebuilding:
+Set `SUBTRACK_VERSION=0.2.2` in `.env` to pin a release. Pull and start the published images without rebuilding:
 
 ```sh
 docker compose pull app worker
@@ -103,7 +103,7 @@ docker compose up -d --no-build
 For reproducible deployments, pin a numbered version rather than `latest`. Release images include an SBOM and signed GitHub build provenance. Verify an image with:
 
 ```sh
-gh attestation verify oci://ghcr.io/jasontsang98/subtrack-web:0.2.1 \
+gh attestation verify oci://ghcr.io/jasontsang98/subtrack-web:0.2.2 \
   --repo jasontsang98/subtrack-web
 ```
 
