@@ -8,7 +8,6 @@ Subtrack Web is intentionally focused on private self-hosting.
 - Improve validation for portable data imports
 - Add an authenticated reverse-proxy deployment guide
 - Add backup integrity and restore smoke tests
-- Add accessible spending calendar and daily payment heatmap
 
 ## Later
 
