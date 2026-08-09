@@ -4,10 +4,8 @@ Subtrack Web is intentionally focused on private self-hosting.
 
 ## Near term
 
-- Add automated API and database integration tests
 - Improve validation for portable data imports
 - Add an authenticated reverse-proxy deployment guide
-- Add backup integrity and restore smoke tests
 
 ## Later
 
