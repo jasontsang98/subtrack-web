@@ -2,7 +2,7 @@
 
 All notable changes to Subtrack Web are documented here. Versions follow [Semantic Versioning](https://semver.org/).
 
-## [0.3.0] - Unreleased
+## [0.3.0] - 2026-08-09
 
 ### Added
 
