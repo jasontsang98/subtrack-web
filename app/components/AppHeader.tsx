@@ -1,13 +1,14 @@
 import Link from "next/link";
 import Image from "next/image";
 
-type Section = "subscriptions" | "insights" | "history" | "reminders" | "system";
+type Section = "subscriptions" | "insights" | "history" | "calendar" | "reminders" | "system";
 
 export function AppHeader({ active }: { active: Section }) {
   const links: Array<[Section, string, string]> = [
     ["subscriptions", "/", "Subscriptions"],
     ["insights", "/insights", "Insights"],
     ["history", "/history", "History"],
+    ["calendar", "/calendar", "Calendar"],
     ["reminders", "/settings", "Reminders"],
     ["system", "/system", "System"],
   ];

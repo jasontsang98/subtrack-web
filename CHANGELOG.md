@@ -2,6 +2,14 @@
 
 All notable changes to Subtrack Web are documented here. Versions follow [Semantic Versioning](https://semver.org/).
 
+## [0.3.0] - Unreleased
+
+### Added
+
+- Added a Calendar tab with monthly payment heatmaps, month navigation, and daily payment details.
+- Combined recorded payment history with active-subscription projections.
+- Added calendar-safe recurrence tests for weekly, fortnightly, monthly, yearly, month-end, and leap-day schedules.
+
 ## [0.2.2] - 2026-08-09
 
 ### Changed
