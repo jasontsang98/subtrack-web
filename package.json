@@ -1,6 +1,6 @@
 {
   "name": "subtrack-web",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "engines": {
     "node": ">=22.13.0"
@@ -9,8 +9,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "npm run build",
-    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next"
+    "test": "npm run test:unit && npm run build",
+    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
+    "test:unit": "node --test --experimental-strip-types tests/*.test.ts"
   },
   "dependencies": {
     "next": "^16.2.11",

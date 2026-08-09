@@ -20,11 +20,11 @@ Subtrack Web helps you track recurring payments, understand projected and histor
 
 ## Security model
 
-Subtrack Web is a **single-user self-hosted application**. A server-side admin password protects every page and API route except the health check and login endpoint.
+Subtrack Web is a **single-user self-hosted application**. A server-side admin password protects every page and API route except the health check and login endpoint. Passwords must contain at least 12 characters.
 
 By default, the application and Mailpit bind only to `127.0.0.1`, PostgreSQL is not published to the host, and no subscription data is sent to a Subtrack-operated service.
 
-The login is appropriate for localhost and a trusted private LAN. Public internet access still requires HTTPS, network restrictions, abuse protection and managed secrets. See [SECURITY.md](SECURITY.md).
+The login is appropriate for localhost and a trusted private LAN. Failed sign-ins are rate limited, state-changing requests require a same-origin browser context, and pages use a strict nonce-based Content Security Policy. The in-memory limiter resets when the app restarts and is not a replacement for reverse-proxy protection on an internet-facing deployment. Public internet access still requires HTTPS, network restrictions, abuse protection and managed secrets. See [SECURITY.md](SECURITY.md).
 
 ## Quick start
 

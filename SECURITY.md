@@ -13,14 +13,14 @@ Do not expose the app directly to the public internet. An internet-accessible de
 - HTTPS
 - a unique admin password and `AUTH_SECRET`
 - authorization for every page and API route
-- CSRF and abuse protections
+- reverse-proxy abuse protection in addition to the built-in origin checks and login limiter
 - managed database and SMTP secrets
 - network restrictions and routine patching
 - tested off-host backups
 
 Changing `BIND_ADDRESS` to `0.0.0.0` expands the trust boundary and is the operator's responsibility.
 
-The built-in login is suitable for a private LAN. Internet exposure still requires HTTPS, network restrictions and abuse protection. Set `COOKIE_SECURE=true` when using HTTPS.
+The built-in login is suitable for a private LAN and includes same-origin mutation checks, temporary in-memory login lockouts, strict nonce-based CSP and defensive response headers. The limiter resets when the app process restarts and is scoped to one app instance. Internet exposure still requires HTTPS, network restrictions and reverse-proxy abuse protection. Set `COOKIE_SECURE=true` when using HTTPS.
 
 ## Reporting a vulnerability
 
