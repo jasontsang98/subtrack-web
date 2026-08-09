@@ -1,0 +1,35 @@
+.system-shell{max-width:1000px;padding-top:58px}
+.system-intro{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:38px}
+.system-intro h1{font-size:56px}
+.system-intro p{margin-top:24px;color:var(--muted)}
+.system-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.system-kpis article{min-height:150px;padding:22px;background:#ffffffb8;border:1px solid var(--line);border-radius:16px}
+.system-kpis span{color:#8c989f;font-size:11px;letter-spacing:1.3px;font-weight:900}
+.system-kpis strong{display:block;margin:27px 0 7px;font:500 22px Georgia}
+.system-kpis p{margin:0;color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.system-message{padding:12px 15px;border-radius:10px;background:#eaf4ee;color:var(--green);font-size:14px;font-weight:700}
+.backup-panel{padding:25px;background:#ffffffb8;border:1px solid var(--line);border-radius:17px}
+.backup-list{border-top:1px solid var(--line)}
+.backup-list article{min-height:74px;display:grid;grid-template-columns:82px 1fr 80px 95px;gap:14px;align-items:center;border-bottom:1px solid var(--line)}
+.backup-list article>div{display:flex;flex-direction:column;gap:5px;min-width:0}
+.backup-list strong{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.backup-list small,.backup-list article>span{color:var(--muted);font-size:12px}
+.backup-status{width:max-content;padding:5px 8px;border-radius:20px;text-transform:capitalize;font-weight:800}
+.backup-status.completed{background:#e2f1e8;color:var(--green)}
+.backup-status.pending,.backup-status.running{background:#f4ead4;color:#946e26}
+.backup-status.failed{background:#f5dfdf;color:#a54242}
+.backup-list .backup-error{color:#a54242}
+.backup-download{height:34px;display:grid;place-items:center;text-decoration:none;font-size:13px}
+.restore-panel{margin:16px 0 55px;padding:25px;background:var(--ink);border-radius:17px;color:white}
+.restore-panel h2{font:500 27px Georgia;margin:0}
+.restore-panel p{color:#aebbc3;font-size:13px;line-height:1.6}
+.restore-panel code{display:block;margin:20px 0;padding:14px;border:1px solid #ffffff24;border-radius:9px;background:#0f2638;color:#a5e1c8;font-size:14px;overflow:auto}
+.restore-panel .restore-warning{color:#e0b7a9;margin-bottom:0}
+@media(max-width:700px){.system-intro{display:block}.system-intro button{margin-top:22px}.system-kpis{grid-template-columns:1fr}.backup-list article{grid-template-columns:72px 1fr}.backup-list article>span:nth-child(3){display:none}.backup-download{grid-column:2;width:max-content;padding-inline:14px;margin-bottom:12px}}
+.portable-panel{margin-top:16px;padding:25px;background:#ffffffb8;border:1px solid var(--line);border-radius:17px}
+.portable-panel h2{font:500 27px Georgia;margin:0}
+.portable-panel>div:first-child>p{max-width:650px;color:var(--muted);line-height:1.6}
+.portable-actions{display:flex;gap:9px;margin-top:20px}
+.portable-actions a{display:grid;place-items:center;text-decoration:none}
+.portable-warning{margin:18px 0 0;color:#9a6b52;font-size:13px;line-height:1.5}
+@media(max-width:600px){.portable-actions{align-items:stretch;flex-direction:column}.portable-actions a{height:40px}}

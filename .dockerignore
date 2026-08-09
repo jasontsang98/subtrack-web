@@ -1,0 +1,11 @@
+node_modules
+.next
+build
+.git
+.env*
+npm-debug.log*
+
+backups
+*.dump
+coverage
+.github

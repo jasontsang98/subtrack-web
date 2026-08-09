@@ -1,0 +1,96 @@
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: subtrack
+      POSTGRES_USER: subtrack
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-subtrack-local-only}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U subtrack -d subtrack"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  migrate:
+    image: postgres:17-alpine
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql://subtrack:subtrack-local-only@db:5432/subtrack}
+    volumes:
+      - ./db/migrations:/migrations:ro
+      - ./scripts/run-migrations.sh:/usr/local/bin/run-migrations:ro
+    command: ["sh", "/usr/local/bin/run-migrations"]
+    restart: "no"
+
+  mailpit:
+    image: axllent/mailpit:v1.27
+    restart: unless-stopped
+    ports:
+      - "${BIND_ADDRESS:-127.0.0.1}:${MAILPIT_PORT:-8025}:8025"
+
+  app:
+    build:
+      context: .
+      target: runner
+    restart: unless-stopped
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      mailpit:
+        condition: service_started
+    environment: &app_environment
+      DATABASE_URL: ${DATABASE_URL:-postgresql://subtrack:subtrack-local-only@db:5432/subtrack}
+      SMTP_HOST: ${SMTP_HOST:-mailpit}
+      SMTP_PORT: ${SMTP_PORT:-1025}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      EMAIL_FROM: ${EMAIL_FROM:-Subtrack <subtrack@localhost>}
+      BACKUP_TIMEZONE: ${BACKUP_TIMEZONE:-Australia/Sydney}
+      BACKUP_HOUR: ${BACKUP_HOUR:-2}
+    ports:
+      - "${BIND_ADDRESS:-127.0.0.1}:${APP_PORT:-3000}:3000"
+    volumes:
+      - ./backups:/backups:ro
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:3000/api/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+  worker:
+    build:
+      context: .
+      target: worker
+    restart: unless-stopped
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      mailpit:
+        condition: service_started
+    environment: *app_environment
+
+  backup:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql://subtrack:subtrack-local-only@db:5432/subtrack}
+      BACKUP_TIMEZONE: ${BACKUP_TIMEZONE:-Australia/Sydney}
+      BACKUP_HOUR: ${BACKUP_HOUR:-2}
+      BACKUP_POLL_SECONDS: ${BACKUP_POLL_SECONDS:-60}
+    volumes:
+      - ./backups:/backups
+      - ./scripts/backup-worker.sh:/usr/local/bin/backup-worker:ro
+    command: ["sh", "/usr/local/bin/backup-worker"]
+
+volumes:
+  postgres_data:
