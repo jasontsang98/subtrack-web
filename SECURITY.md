@@ -6,12 +6,12 @@ Security fixes are applied to the latest release on `main`.
 
 ## Deployment boundary
 
-Subtrack Web is designed for a trusted, single-user environment and binds to `127.0.0.1` by default. It currently has no application-level authentication.
+Subtrack Web is designed for a trusted, single-user environment, binds to `127.0.0.1` by default and protects pages and API routes with a single-admin password.
 
 Do not expose the app directly to the public internet. An internet-accessible deployment requires, at minimum:
 
 - HTTPS
-- authentication and session management
+- a unique admin password and `AUTH_SECRET`
 - authorization for every page and API route
 - CSRF and abuse protections
 - managed database and SMTP secrets
@@ -19,6 +19,8 @@ Do not expose the app directly to the public internet. An internet-accessible de
 - tested off-host backups
 
 Changing `BIND_ADDRESS` to `0.0.0.0` expands the trust boundary and is the operator's responsibility.
+
+The built-in login is suitable for a private LAN. Internet exposure still requires HTTPS, network restrictions and abuse protection. Set `COOKIE_SECURE=true` when using HTTPS.
 
 ## Reporting a vulnerability
 

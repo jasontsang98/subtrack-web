@@ -9,7 +9,15 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 export const metadata: Metadata = {
   title: { default: "Subtrack Web", template: "%s | Subtrack Web" },
   description: "A private-by-default, self-hosted subscription manager backed by PostgreSQL.",
-  icons: { icon: "/subtrack-icon.png", shortcut: "/subtrack-icon.png", apple: "/subtrack-icon.png" },
+  manifest: "/manifest.webmanifest",
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

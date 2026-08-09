@@ -20,11 +20,11 @@ Subtrack Web helps you track recurring payments, understand projected and histor
 
 ## Security model
 
-Subtrack Web is a **single-user localhost application**. It does not currently include login or multi-user access control.
+Subtrack Web is a **single-user self-hosted application**. A server-side admin password protects every page and API route except the health check and login endpoint.
 
 By default, the application and Mailpit bind only to `127.0.0.1`, PostgreSQL is not published to the host, and no subscription data is sent to a Subtrack-operated service.
 
-Do not bind Subtrack to a public interface or expose it to the internet without adding authentication, HTTPS, access controls and managed secrets. See [SECURITY.md](SECURITY.md).
+The login is appropriate for localhost and a trusted private LAN. Public internet access still requires HTTPS, network restrictions, abuse protection and managed secrets. See [SECURITY.md](SECURITY.md).
 
 ## Quick start
 
@@ -38,6 +38,8 @@ Requirements:
 git clone https://github.com/jasontsang98/subtrack-web.git
 cd subtrack-web
 cp .env.example .env
+# Set a unique AUTH_PASSWORD, then generate AUTH_SECRET:
+# openssl rand -hex 32
 docker compose up --build -d
 ```
 
@@ -76,12 +78,38 @@ Copy `.env.example` to `.env`. Important settings:
 | `APP_PORT` | `3000` | Web application port |
 | `MAILPIT_PORT` | `8025` | Local email inbox port |
 | `POSTGRES_PASSWORD` | local-only default | PostgreSQL password inside the Docker network |
+| `AUTH_PASSWORD` | required | Single-admin login password |
+| `AUTH_SECRET` | required | Random secret of at least 32 characters used to sign sessions |
+| `COOKIE_SECURE` | `false` | Set to `true` only when serving the app over HTTPS |
 | `BACKUP_TIMEZONE` | `Australia/Sydney` | IANA timezone for backups |
 | `BACKUP_HOUR` | `2` | Daily backup hour, 023 |
 | `SMTP_HOST` | `mailpit` | SMTP host |
 | `EMAIL_FROM` | `Subtrack <subtrack@localhost>` | Reminder sender |
 
 If you change `POSTGRES_PASSWORD`, update `DATABASE_URL` to match. Never commit your `.env` file.
+
+## Prebuilt containers
+
+Versioned images are published to GitHub Container Registry for AMD64 and ARM64:
+
+- `ghcr.io/jasontsang98/subtrack-web:0.2.0`
+- `ghcr.io/jasontsang98/subtrack-web-worker:0.2.0`
+
+Set `SUBTRACK_VERSION=0.2.0` in `.env` to pin a release. Pull and start the published images without rebuilding:
+
+```sh
+docker compose pull app worker
+docker compose up -d --no-build
+```
+
+For reproducible deployments, pin a numbered version rather than `latest`. Release images include an SBOM and signed GitHub build provenance. Verify an image with:
+
+```sh
+gh attestation verify oci://ghcr.io/jasontsang98/subtrack-web:0.2.0 \
+  --repo jasontsang98/subtrack-web
+```
+
+Local development still uses `docker compose up --build`, which builds the same Dockerfile targets on your machine.
 
 ## Data, backups and restore
 
@@ -104,6 +132,14 @@ Restore a backup:
 Restore requires typing `RESTORE`, stops the app and workers, replaces the database in one transaction, reapplies migrations, and restarts services.
 
 A backup on the same disk is not sufficient protection against disk failure. Copy important archives to another device or encrypted storage location.
+
+Verify that the database survives container recreation and that PostgreSQL can read a fresh backup archive:
+
+```sh
+./scripts/verify-persistence.sh
+```
+
+The check uses an isolated marker table, removes it afterward, and does not replace subscription data.
 
 ## Email reminders
 
